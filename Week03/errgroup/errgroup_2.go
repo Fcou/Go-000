@@ -37,24 +37,17 @@ func main() {
 	})
 
 	// 并发执行监听signal信号
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT)
 	go func() {
-		for {
-			select {
-			case s := <-c:
-				switch s {
-				case syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT:
-					cancel()
-				default:
-				}
-			}
-		}
+		c := make(chan os.Signal, 1)
+		signal.Notify(c, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT)
+		<-c
+		cancel()
 	}()
 
 	// context cancel后，关闭全部并发的 http server，全部关闭完成后通知主goroutine
 	go func() {
 		<-ctx.Done()
+		// 开始优雅关闭
 		go func() {
 			log.Println(ctx.Err())
 			if err := server1.Shutdown(context.Background()); err != nil {
