@@ -1,0 +1,17 @@
+syntax = "proto3";
+package myproto;
+
+message Person {
+    string name =1; //姓名
+    int32 sex = 2 ; //性别
+    repeated int64 weight =3; //体重
+    string age = 4; //年龄
+}
+
+message FriendsInfo{
+    repeated Person Friends = 1;
+}
+
+service SearchService {
+  rpc Search (Person) returns (FriendsInfo);     //rpc 服务的函数名 (传入参数)返回(返回参数)
+}
