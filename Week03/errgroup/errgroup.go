@@ -64,9 +64,7 @@ func main() {
 		case <-ctx.Done():
 			log.Println(ctx.Err())
 			server1.Shutdown(context.Background())
-			server1.Close()
 			server2.Shutdown(context.Background())
-			server2.Close()
 			shutdown <- struct{}{}
 			return
 		}
@@ -77,5 +75,5 @@ func main() {
 		log.Println(err) //打印第一个错误
 	}
 	<-shutdown
-	log.Println("all servers shutdown sucess")
+	log.Println("all servers shutdown success")
 }
