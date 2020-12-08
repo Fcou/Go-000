@@ -36,7 +36,7 @@ func main() {
 		return server2.ListenAndServe()
 	})
 
-	// 并发执行监听signal信号
+	// 并发执行监听signal信号，接受到信号则开始关闭全部server流程
 	go func() {
 		c := make(chan os.Signal, 1)
 		signal.Notify(c, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT)
