@@ -26,22 +26,14 @@ func main() {
 		Addr: ":8081",
 	}
 	g.Go(func() error {
-		if err := server1.ListenAndServe(); err != nil {
-			cancel()
-			return err
-		}
-		return nil
+		return server1.ListenAndServe()
 	})
 	// 并发启动server2
 	server2 := http.Server{
 		Addr: ":8082",
 	}
 	g.Go(func() error {
-		if err := server2.ListenAndServe(); err != nil {
-			cancel()
-			return err // 简单错误直接返回即可，不用pkg/errors处理
-		}
-		return nil
+		return server2.ListenAndServe()
 	})
 
 	// 并发执行监听signal信号
@@ -83,9 +75,8 @@ func main() {
 	}()
 
 	if err := g.Wait(); err != nil {
-		// ListenAndServe always returns a non-nil error. After Shutdown or Close, the returned error is ErrServerClosed.
-		// var ErrServerClosed = errors.New("http: Server closed")
-		log.Println(err) //打印第一个错误
+		cancel() // 收到第一个错误后，开始关闭全部server流程
+		log.Println(err)
 	}
 	<-shutdown
 }
