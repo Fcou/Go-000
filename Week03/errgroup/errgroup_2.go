@@ -48,20 +48,22 @@ func main() {
 	go func() {
 		<-ctx.Done()
 		// 开始优雅关闭
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second) //5秒超时控制
+		defer cancel()
+
 		go func() {
 			log.Println(ctx.Err())
-			if err := server1.Shutdown(context.Background()); err != nil {
+			if err := server1.Shutdown(ctx); err != nil {
 				log.Println("server1 shutdown failed, err: %v\n", err)
 			}
-			if err := server2.Shutdown(context.Background()); err != nil {
+			if err := server2.Shutdown(ctx); err != nil {
 				log.Println("server2 shutdown failed, err: %v\n", err)
 			}
 			log.Println("all servers graceful shutdown")
 			close(shutdown)
 			return
 		}()
-		// 超过3分钟没关闭完成，则强制退出
-		<-time.After(time.Minute * 3)
+		<-ctx.Done()
 		log.Println("all servers no-graceful shutdown")
 		close(shutdown)
 		return
