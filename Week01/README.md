@@ -7,7 +7,8 @@
 将复杂的系统进行拆分的方法，就是“分而治之”。分而治之，可以让复杂的事情变的简单，这很符合我们平时处理 问题的方法。
 - 使用轻量级通讯等方式进行整合的设计，就是“合而用之”的方法，合而用之可以让微小的力量变动强大。
 ## 3.Protobuf
-Google Protocol Buffer(简称 Protobuf)是一种轻便高效的结构化数据存储格式，平台无关、语言无关、可扩展，可用于通讯协议和数据存储等领域。
+* Google Protocol Buffer(简称 Protobuf)是一种轻便高效的结构化数据存储格式，平台无关、语言无关、可扩展，可用于通讯协议和数据存储等领域。
+* 可以把IDLxxx.proto 文件视为，对接口编写的一种抽象，对xxx.proto进行 protoc --go_out=plugins=grpc:. *.proto 命令后，可以具体生成支撑gRPC的go语言版本的接口编码信息
 ## 4.GRPC
 - RPC
     - RPC(Remote Procedure Call Protocol)——远程过程调用协议，它是一种通过网络从远程计算机程序上请求
